@@ -126,15 +126,15 @@ export class BookAddComponent implements OnInit {
       .pipe(
         tap({
           next: (response) => {
-            console.log(response.message); // Book added successfully message
+            console.log(response.message);
             this.snackBar.open('Book added successfully', '', {
-              duration: 1000, // Duration in milliseconds
+              duration: 1000,
             });
           },
           error: (error) => {
-            console.error(error); // Log the error in the console
+            console.error(error);
             this.snackBar.open('Book already exists', '', {
-              duration: 1000, // Duration in milliseconds
+              duration: 1000,
             });
           },
         })

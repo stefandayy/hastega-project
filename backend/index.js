@@ -13,12 +13,14 @@ const connection = mysql.createPool({
   password: "Stefan123!",
   database: "mydatabase",
 });
-/* 
+
+//Crea la tabella 'users' se non esiste
 connection.query(`
   CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    lastname VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE KEY
   );
 `);
 
@@ -28,13 +30,15 @@ connection.query(`
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description LONGTEXT NOT NULL,
     isbn VARCHAR(255) NOT NULL,
     user_id INT NOT NULL,
     readings INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    added_date DATE NOT NULL DEFAULT '2023-08-02',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
-`); */
+`);
 
 // Middleware per controllare se l'utente esiste
 async function checkUserExists(req, res, next) {

@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../services/book.service';
 import { tap } from 'rxjs';
-import { Book } from '../model/book.model';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-user-bookdetails',
@@ -14,16 +12,17 @@ export class UserBookdetailsComponent {
   book!: any;
 
   constructor(
-    private route: ActivatedRoute,
     private bookService: BookService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      const userId = Number(params.get('userId')); // Convert to number
-      const bookId = Number(params.get('bookId')); // Convert to number
+      const userId = Number(params.get('userId'));
+      const bookId = Number(params.get('bookId'));
 
+      //prende singolo libro dalla libreria
       this.bookService
         .getBookFromLibrary(userId, bookId)
         .pipe(
@@ -41,8 +40,9 @@ export class UserBookdetailsComponent {
     });
   }
 
+  //Incrementa readings
   incrementReadings() {
-    const userId = this.book.user_id; // Access the user ID from the book object
+    const userId = this.book.user_id;
     const bookId = this.book.id;
 
     this.bookService
@@ -50,7 +50,6 @@ export class UserBookdetailsComponent {
       .pipe(
         tap({
           next: (response) => {
-            // Update the book object with the updated readings value
             console.log(response);
             this.book.readings += 1;
           },
@@ -62,8 +61,9 @@ export class UserBookdetailsComponent {
       .subscribe();
   }
 
+  //decrementa readings
   decrementReadings() {
-    const userId = this.book.user_id; // Access the user ID from the book object
+    const userId = this.book.user_id;
     const bookId = this.book.id;
 
     this.bookService
@@ -71,7 +71,6 @@ export class UserBookdetailsComponent {
       .pipe(
         tap({
           next: (response) => {
-            // Update the book object with the updated readings value
             console.log(response);
             this.book.readings -= 1;
           },
