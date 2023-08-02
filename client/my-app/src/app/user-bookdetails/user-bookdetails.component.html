@@ -1,0 +1,33 @@
+<h2>Book Detail</h2>
+<div class="container">
+  <mat-card class="card-details" *ngIf="book">
+    <div>
+      <mat-card-title>{{ book.title }} </mat-card-title>
+      <mat-card-subtitle>
+        {{ book.author }}
+      </mat-card-subtitle>
+    </div>
+
+    <mat-card-content>
+      {{ book.description }}
+    </mat-card-content>
+
+    <mat-card-footer>
+      <mat-card-content>
+        <p class="readings-text"><strong>Readings</strong></p>
+        <div class="readings-container">
+          <button mat-icon-button size="small" (click)="decrementReadings()">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <div class="readings-text">{{ book.readings }}</div>
+          <button mat-icon-button size="small" (click)="incrementReadings()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card-footer>
+  </mat-card>
+  <p></p>
+
+  <!-- Add other book details here -->
+</div>

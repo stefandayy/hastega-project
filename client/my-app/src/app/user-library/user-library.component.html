@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>User Detail</h2>
+  <div class="data-container" *ngIf="user">
+    <p>
+      Name: <strong> {{ user.name }} {{ user.lastname }}</strong>
+    </p>
+    <p>
+      Email: <strong>{{ user.email }}</strong>
+    </p>
+
+    <h3>Books</h3>
+    <!-- <ul>
+      <li *ngFor="let book of books">{{ book.title }} {{ book.author }}</li>
+    </ul> -->
+    <button mat-raised-button (click)="goAddBook()">
+      Add Book <mat-icon>add</mat-icon>
+    </button>
+
+    <mat-card class="book-card" *ngFor="let book of books">
+      <button
+        class="readmore-button"
+        mat-icon-button
+        (click)="goBookDetails(book.id)"
+      >
+        <mat-icon>read_more</mat-icon>
+      </button>
+      <mat-card-title> {{ book.title }} </mat-card-title>
+      <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+      <button
+        class="cancel-button"
+        mat-icon-button
+        color="warn"
+        (click)="onDelete(user.id, book.id)"
+      >
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-card>
+  </div>
+</div>

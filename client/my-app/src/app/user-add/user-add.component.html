@@ -1,0 +1,27 @@
+<div class="container">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Name:</mat-label>
+      <input matInput type="text" formControlName="name" />
+    </mat-form-field>
+
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Lastname:</mat-label>
+        <input matInput type="text" formControlName="lastname" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Email:</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+    </div>
+    <div class="button-container">
+      <button type="submit" mat-raised-button [disabled]="!userForm.valid">
+        Add User
+      </button>
+      <button mat-raised-button [routerLink]="'/'">Back</button>
+    </div>
+  </form>
+</div>

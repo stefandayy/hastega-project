@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-details {
+  min-width: 200px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  gap: 15px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.readings-text {
+  font-size: 20px;
+}
+
+/* If you want to apply styles globally, add these styles to the styles.scss file */
+
+/* Flexbox container to align items vertically */
+.readings-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional: This centers the items horizontally */
+}
+
+/* If you want to apply styles only to this component, add them to your component's CSS file */
+
+/* Flexbox container to align items vertically */
+::ng-deep .readings-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional: This centers the items horizontally */
+}
+
+/* Style for the readings text */
+::ng-deep .readings-text {
+  margin: 0 8px; /* Optional: Add some space between the buttons and the text */
+}

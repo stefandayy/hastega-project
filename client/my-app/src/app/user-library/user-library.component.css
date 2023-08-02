@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.data-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book-card {
+  text-align: center;
+  margin-top: 30px;
+  width: 300px;
+  padding: 20px;
+}
+
+.readmore-button {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+}
+
+.cancel-button {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+}
+
+cance h3 {
+  margin-top: 30px;
+}
