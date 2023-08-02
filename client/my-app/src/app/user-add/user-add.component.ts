@@ -4,6 +4,7 @@ import { UserService } from '../services/user.service';
 import { User } from '../model/user.model';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-add',
@@ -16,7 +17,8 @@ export class UserAddComponent {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -34,12 +36,18 @@ export class UserAddComponent {
           tap({
             next: (response) => {
               console.log('User added successfully', response);
-              // Clear the form after successful submission
+
               this.userForm.reset();
               this.router.navigateByUrl('home');
+              this.snackBar.open('User added', '', {
+                duration: 1000,
+              });
             },
             error: (error) => {
               console.error('Error adding user', error);
+              this.snackBar.open('Email already exists', '', {
+                duration: 1000,
+              });
             },
           })
         )

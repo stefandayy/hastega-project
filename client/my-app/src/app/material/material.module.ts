@@ -7,7 +7,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   imports: [
     MatCardModule,
@@ -17,6 +17,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatSnackBarModule,
   ],
   exports: [
     MatCardModule,
@@ -26,6 +27,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatSnackBarModule,
   ],
 })
 export class MaterialModule {}

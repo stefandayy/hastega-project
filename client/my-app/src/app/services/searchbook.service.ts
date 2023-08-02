@@ -20,9 +20,9 @@ export class SearchbookService {
       maxResults: '10',
     };
     return this.http.get<any>(this.apiUrlBooks, { params }).pipe(
-      // voglio far vedere solo libri che HANNO l'img di copertina
+      /* voglio far vedere solo libri che HANNO l'img di copertina
+          e la descrizione */
       map((response) => {
-        // con filter ritorno solo libri con imageLinks.thumbnail
         const filteredItems = response.items.filter(
           (item: any) =>
             item.volumeInfo.imageLinks &&

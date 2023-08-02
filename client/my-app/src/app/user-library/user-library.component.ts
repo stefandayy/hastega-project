@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { pipe, tap } from 'rxjs';
 import { BookService } from '../services/book.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-library',
@@ -12,17 +13,21 @@ import { BookService } from '../services/book.service';
 export class UserLibraryComponent implements OnInit {
   user: any;
   books: any[] = [];
+  totalBooks: any;
 
   constructor(
-    private route: ActivatedRoute,
+    private bookService: BookService,
     private userService: UserService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
-    private bookService: BookService
+
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      const userId = Number(params.get('userId')); // Convert to number
+    //prende l'userId dall'url tramite params
+    this.activatedRoute.paramMap.subscribe((params) => {
+      const userId = Number(params.get('userId')); // Converte in number
 
       this.userService
         .getUserDetails(userId)
@@ -31,6 +36,7 @@ export class UserLibraryComponent implements OnInit {
             next: (response) => {
               this.user = response.user;
               this.books = response.books;
+              this.totalBooks = response.totalBooks;
             },
             error: (error) => {
               console.error(error);
@@ -40,7 +46,7 @@ export class UserLibraryComponent implements OnInit {
         .subscribe();
     });
   }
-
+  //Cancella singolo libro dalla libreria
   onDelete(userId: string, bookId: string) {
     this.bookService
       .deleteBookFromLibrary(userId, bookId)
@@ -48,22 +54,27 @@ export class UserLibraryComponent implements OnInit {
         tap({
           next: (response) => {
             console.log('Book deleted successfully!', response);
-            // Handle success, e.g., display a success message, refresh book list, etc.
+
             this.books = this.books.filter((book) => book.id !== bookId);
+            this.totalBooks -= 1;
+            this.snackBar.open('Book deleted', '', {
+              duration: 1000,
+            });
           },
           error: (error) => {
             console.error('Failed to delete book:', error);
-            // Handle error, e.g., display an error message, etc.
           },
         })
       )
       .subscribe();
   }
 
+  //Reindirizza alla pagina add book
   goAddBook() {
     this.router.navigateByUrl(`user/${this.user.id}/add-book`);
   }
 
+  //Accede al dettaglio della libro presente nella libreria dell'utente
   goBookDetails(bookId: number) {
     this.router.navigateByUrl(`user/${this.user.id}/books/${bookId}`);
   }

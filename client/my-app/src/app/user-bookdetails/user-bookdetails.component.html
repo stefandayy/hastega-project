@@ -1,11 +1,19 @@
 <h2>Book Detail</h2>
 <div class="container">
   <mat-card class="card-details" *ngIf="book">
+    <mat-card-subtitle>
+      Added on: {{ book.added_date.split("T")[0] }}
+    </mat-card-subtitle>
+    <div>
+      <img [src]="book.image_url" alt="book image" />
+    </div>
+
     <div>
       <mat-card-title>{{ book.title }} </mat-card-title>
       <mat-card-subtitle>
         {{ book.author }}
       </mat-card-subtitle>
+      <mat-card-subtitle> ISBN: {{ book.isbn }} </mat-card-subtitle>
     </div>
 
     <mat-card-content>
@@ -26,8 +34,13 @@
         </div>
       </mat-card-content>
     </mat-card-footer>
+
+    <div>
+      <button mat-raised-button (click)="goBack()">
+        Go Back <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
   </mat-card>
-  <p></p>
 
   <!-- Add other book details here -->
 </div>

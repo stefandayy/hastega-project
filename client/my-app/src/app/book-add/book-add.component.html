@@ -1,37 +1,65 @@
-<div class="container">
-  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline">
-      <mat-label>Title:</mat-label>
-      <input matInput type="text" formControlName="title" />
-    </mat-form-field>
-
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Author:</mat-label>
-        <input matInput type="text" formControlName="author" />
-      </mat-form-field>
-    </div>
-
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Description:</mat-label>
-        <input matInput type="text-area" formControlName="description" />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Isbn:</mat-label>
-        <input matInput type="text" formControlName="isbn" />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Readings:</mat-label>
-        <input matInput type="number" formControlName="readings" />
-      </mat-form-field>
-    </div>
-    <button type="submit" mat-raised-button [disabled]="!bookForm.valid">
-      Add Book
+<div class="search-container">
+  <h2>Book Finder</h2>
+  <mat-form-field>
+    <input
+      class="search-input"
+      matInput
+      type="text"
+      (keydown)="onKeyDown($event)"
+      [formControl]="myControl"
+      placeholder="Enter a search term"
+      required
+      [matAutocomplete]="auto"
+    />
+    <button
+      *ngIf="myControl.value"
+      matSuffix
+      mat-icon-button
+      (click)="myControl.reset()"
+    >
+      <mat-icon>close</mat-icon>
     </button>
-  </form>
+
+    <!-- [displayWith] viene utilizzato per personalizzare la visualizzazione dei dati all'interno di un menu a discesa mat-select. Questo
+      attributo accetta una funzione che definisce come i dati devono essere visualizzati nel menu a discesa. -->
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTitle">
+      <mat-option
+        class="autocomplete-option"
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option.title }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <!-- Button search -->
+  <div class="button-group">
+    <button
+      class="button-search"
+      mat-raised-button
+      color="primary"
+      (click)="searchBooks()"
+      [disabled]="!myControl.value"
+    >
+      Search <mat-icon>search</mat-icon>
+    </button>
+
+    <button mat-raised-button (click)="goBack()">
+      Go Back <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <div class="book-list">
+    <div class="book" *ngFor="let book of searchResults$ | async">
+      <h3>{{ book?.volumeInfo.title }}</h3>
+
+      <p>{{ book.volumeInfo.authors?.join(", ") }}</p>
+      <p>ISBN: {{ book.volumeInfo.industryIdentifiers[0].identifier }}</p>
+      <img [src]="book?.volumeInfo.imageLinks?.thumbnail" />
+      <button mat-raised-button (click)="onSubmit(book)">
+        Add to library <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>

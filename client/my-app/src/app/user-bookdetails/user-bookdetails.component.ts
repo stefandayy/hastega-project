@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BookService } from '../services/book.service';
 import { tap } from 'rxjs';
 import { Book } from '../model/book.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-user-bookdetails',
@@ -15,7 +16,7 @@ export class UserBookdetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
-    private ngZone: NgZone
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -29,8 +30,7 @@ export class UserBookdetailsComponent {
           tap({
             next: (response) => {
               this.book = response;
-              console.log(this.book.user_id);
-              console.log(this.book.id);
+              console.log(this.book);
             },
             error: (error) => {
               console.error(error);
@@ -81,5 +81,9 @@ export class UserBookdetailsComponent {
         })
       )
       .subscribe();
+  }
+
+  goBack() {
+    this.router.navigateByUrl(`user/${this.book.user_id}`);
   }
 }

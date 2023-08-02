@@ -13,7 +13,7 @@ const connection = mysql.createPool({
   password: "Stefan123!",
   database: "mydatabase",
 });
-
+/* 
 connection.query(`
   CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +34,7 @@ connection.query(`
     readings INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
-`);
+`); */
 
 // Middleware per controllare se l'utente esiste
 async function checkUserExists(req, res, next) {
@@ -60,7 +60,14 @@ app.get("/", (req, res) => {
 // Visualizza tutti gli utenti
 app.get("/users", async (req, res) => {
   try {
-    const [rows] = await connection.query("SELECT * FROM users");
+    const query = `
+      SELECT users.*, COUNT(books.id) AS totalBooks
+      FROM users
+      LEFT JOIN books ON users.id = books.user_id
+      GROUP BY users.id
+    `;
+
+    const [rows] = await connection.query(query);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -87,15 +94,15 @@ app.post("/users", async (req, res) => {
   }
 });
 
-// Delete a user
+// Cancella un utente
 app.delete("/users/:userId", checkUserExists, async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    // First, delete all books associated with the user
+    // Prima cancello i libri associati all'utente
     await connection.query("DELETE FROM books WHERE user_id = ?", [userId]);
 
-    // Then, delete the user
+    // Poi cancello l'utente
     await connection.query("DELETE FROM users WHERE id = ?", [userId]);
 
     res.json({ message: "User deleted successfully" });
@@ -126,13 +133,13 @@ app.get("/users/:userId", checkUserExists, async (req, res) => {
   }
 });
 
-// Get a single book from a user's library
+// Prende un singolo libro dalla libreria dell'utente
 app.get("/users/:userId/books/:bookId", checkUserExists, async (req, res) => {
   const userId = req.params.userId;
   const bookId = req.params.bookId;
 
   try {
-    // Check if the book belongs to the user
+    // Controlla se il libro appartiente all'utente
     const [bookRows] = await connection.query(
       "SELECT * FROM books WHERE id = ? AND user_id = ?",
       [bookId, userId]
@@ -154,11 +161,12 @@ app.get("/users/:userId/books/:bookId", checkUserExists, async (req, res) => {
 // Aggiungi un libro alla libreria dell'utente
 app.post("/users/:userId/books", checkUserExists, async (req, res) => {
   const userId = req.params.userId;
-  const { title, author, description, isbn, readings } = req.body;
-  if (!title || !author || !description || !isbn) {
-    return res
-      .status(400)
-      .json({ message: "Title, author, description, and ISBN are required" });
+  const { title, author, description, isbn, readings, image_url } = req.body;
+  const addedDate = new Date();
+  if (!title || !author || !description || !isbn || !image_url) {
+    return res.status(400).json({
+      message: "Title, author, description, image_url and ISBN are required",
+    });
   }
 
   try {
@@ -178,19 +186,19 @@ app.post("/users/:userId/books", checkUserExists, async (req, res) => {
 
     // If the book with the given ISBN does not exist, insert the new book into the library
     await connection.query(
-      "INSERT INTO books (title, author, description, isbn, user_id, readings) VALUES (?, ?, ?, ?, ?, ?)",
-      [title, author, description, isbn, userId, readings]
+      "INSERT INTO books (title, author, description, isbn, user_id, readings,image_url, added_date) VALUES (?, ?, ?, ?, ?, ?, ?,?)",
+      [title, author, description, isbn, userId, readings, image_url, addedDate]
     );
 
-    res
-      .status(201)
-      .json({ message: "Book added to user library successfully" });
+    res.status(201).json({
+      message: "Book added to user library successfully",
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Delete a book from a user's library
+// Cancella un libro dalla libreria dell'utente
 app.delete(
   "/users/:userId/books/:bookId",
   checkUserExists,
@@ -221,7 +229,7 @@ app.delete(
   }
 );
 
-//Increments reading by 1
+//Incrementa readings di 1
 app.patch(
   "/users/:userId/books/:bookId/increment",
   checkUserExists,
@@ -255,7 +263,7 @@ app.patch(
   }
 );
 
-//Decrement Readings
+//Sottrae  Readings di 1
 app.patch(
   "/users/:userId/books/:bookId/decrement",
   checkUserExists,

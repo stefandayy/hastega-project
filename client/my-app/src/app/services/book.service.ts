@@ -29,7 +29,6 @@ export class BookService {
       {}
     );
   }
-
   decrementReadings(userId: number, bookId: number): Observable<any> {
     return this.http.patch<any>(
       `${this.apiUrl}/users/${userId}/books/${bookId}/decrement`,
